@@ -5,3 +5,4 @@ Original repo [here](https://github.com/trespassersW/UserScripts/blob/master/sho
 Changes:
 
 * Fixed bug with incorrect mouse behavior on pages with Flash
+* Fixed position of UI (now 30 px above mouse)

@@ -1,53 +1,16 @@
 // ==UserScript==
-// @name           translate.google tooltip
-// @namespace      trespassersW
-// @author      trespassersW
+// @name           translate.google tooltip (fork)
+// @namespace      byaka
+// @author      byaka
 // @copyright   trespassersW
 // @license     MIT
-// @description    Translates selected text into a `tooltip' via Google translate 
+// @description    Translates selected text into a `tooltip' via Google translate
 // @include        http://*
 // @include        https://*
 // @include        file://*
 //  about:config -> greasemonkey.fileIsGreaseable <- true
-// @homepageURL https://openuserjs.org/scripts/trespassersW/translate.google_tooltip
-// @version 16.01.20.1
-//* This is a descendant of lazyttrick's  http://userscripts.org/scripts/show/36898.
-// 16.01.20.0  * a bunch of small hotfixes 
-// 16.01.17-2 *+ translation from input/textarea fields
-// 16.01.16.1 + alternative translation
-// 4.1.02 2016-01-03 * left-click only
-// 4.1.01 2015-12-17 * changes in translate.google API
-// 3.9.50 2015-10-17 + multi-sentence; GM_menu item
-// 3.9.10 2015-07-29 * fix for Ff39; + now works in chrome
-// 3.7.96 2015-05-10 * TTS in ff37; * DOMparser instead of IFRAME; * bugfixes
-// 3.7.8.2 2015-04-26 + new country flags host
-// 3.7.2 2015-04-20 * TTS: alt-select text inside tooltip and [ctrl/shift]-click language icon below
-//   * [shift] tts window in IFRAME (: only works on google.* and file://* :(
-//   * [ctrl] tts window in new tab
-// 3.6.2.2 2015-04-19 * gray gradient background 
-// 3.5.1 2015-04-15
-//  + TTS: alt-select text inside tooltip and shift-click language icon below
-//  * From<->To buttons fix; * err handler
-// 3.0.0  - national flags icons -- from www.senojflags.com
-// 2.3  - new editable 'source text' field
-// 2.2.2  - backward translation - select text inside tooltip and click the icon under your selection.
-// 2.2.1  - Ctrl-Alt-click removes item from the history of translations
-//  - Ability to change translation in the history -
-//    select desired translation in the tooltip window using ctrl or alt -
-//    which one is checked in your settings - then click on the icon below the selection.
-// 2.2  - history of translations 
-// 2.1.2 - Selected text is fetched in the moment when you hover over the icon.
-//    So, you can select a few letters, then adjust your selection using shift + arrows. 
-// 2.0.0d - native GT languages list
-// 2.0.0c Alt key option added
-// If something goes wrong:
-// Tools->SQLite manager-> Database-> Connect_database->
-//  %YourBrowserProfile%\gm_scripts\translate.google_tooltip.db ->
-//  scriptvals->  alt/ctrl <- false
-// 2.0.0b 
-// - exit by ESC
-// - 1k letters limit -- don't strain your Google
-//*/
+// @homepageURL https://github.com/byaka/translate.google-tooltip
+// @version 0.1
 // /grant GM_addStyle
 // @grant GM_getValue
 // #grant GM_log
@@ -58,12 +21,12 @@
 // @grant GM_setClipboard
 // @connect-src translate.google.com
 // @connect-src cdn.rawgit.com
-// @icon  data:image/jpg;base64, R0lGODlhIAARALP/AAAAAP///xMYfAqf////Zv/qDuCeH8VmB8DAwAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAgALAAAAAAgABEAQASdEMlJgb00awkMKQZYjB8RBsE4AtLQvtt0sXHcEcT1pbxK0hsXRmYIGUUgA3DiQjQtssInRAjglMsa4ibtlqSGgECQymmaAwDYUhSFfKoQDQ3LdA6Hoh6qbW4sJHpFWTUAOEA3Vj1WZjF+HQU9X18oPxl0Wx4kXoFiZF1zMEJgbW8qJnAHoU4takocpW5IIISYGh1HRlh9hRZ4eIRaEQA7
+// @icon  data:image/png;base64,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
 //
 // ==/UserScript==
 
-if(document.body){ 
-
+if(document.body){
+GM_setValue('alt', false);
 var main = function (){ "use strict";
 
 var   GTsuffix=".com"; // ".fr" ".de" ".ru" ".com"
@@ -74,7 +37,7 @@ var UA = navigator.userAgent;
 var isChrome= (navigator.userAgent.indexOf("AppleWebKit")>0);
 var moz=isChrome? "-webkit-": "-moz-";
 
-var   GTurl= "https://translate.google"+GTsuffix+"/?"; 
+var   GTurl= "https://translate.google"+GTsuffix+"/?";
 //var dictURL= "https://translate.google"+GTsuffix+"/translate_a/t?client=t";
 var dictURL= "https://translate.google"+GTsuffix+"/translate_a/single?client=t";
 var  ttsURL= "https://translate.google.com/translate_tts?client=t";
@@ -83,13 +46,13 @@ var version= 3790;
 var HREF_NO = 'javascript:void(0)';
 
 var llii=0, _log = function(){ /* * /
- for (var s=++llii +':', li=arguments.length, i = 0; i<li; i++) 
+ for (var s=++llii +':', li=arguments.length, i = 0; i<li; i++)
   s+=' ' + arguments[i];
  console.log(s)
 /* */
 },_i=function(){};
 //_log=console.log.bind(console);
-_i=console.info.bind(console);
+//_i=console.info.bind(console);
 _i("tgtt..");
 var URL='*'; var tURL;
 var GT_tl='auto';
@@ -110,7 +73,7 @@ var rtl_langs="ar fa iw ur";
 var inTextArea= null;
 var maxHT=20, maxWC=3;
 var sourceBH = 3, sourceDP =10;
-var ht=null;  // history table, 
+var ht=null;  // history table,
 
 var imgForw,imgBack,imgSwap,imgUse,imgSave,imgFlags,imgForwSrc,imgBackSrc,imgClip,imgGoGo;
 var txtSel; // text selected
@@ -123,7 +86,7 @@ var noMup=0;
 var _G = (isChrome?'':moz)+"linear-gradient",_T='transparent';
 var G_ ='rgba(0,0,0,.1)',W_='rgba(255,255,255,.1)';
 var FG={
-t:  ['#000'   ,'#000'    ,'#000'   ,'#000'   ,'#eec'   ,'#000'   ,'#000'   ], // text 
+t:  ['#000'   ,'#000'    ,'#000'   ,'#000'   ,'#eec'   ,'#000'   ,'#000'   ], // text
 l:  ['#047'   ,'#047'    ,'#047'   ,'#052'   ,'#7CF'   ,'#047'   ,'#670000'], // links
 g:  ['#404040','#404040' ,'#404040','#404040','#ccb'   ,'#404040','#404040']  // greyed txt
 };
@@ -156,20 +119,20 @@ function mousedownCleaning(evt){
   noMup=0; // patch :/
    if(divDic)  {
       if(!clickedInsideID(evt.target,'divDic')){
-      evt.preventDefault(),evt.stopPropagation(); 
+      evt.preventDefault(),evt.stopPropagation();
       if(dU && clickedInsideID(t,'divUse')){
         if(clickedInsideID(t,'divGetback')) forwLookup(evt); else
         if(clickedInsideID(t,'divGetforw')) backLookup(evt); else
-        if(clickedInsideID(t,'imgUse')) useClick(evt); else 
+        if(clickedInsideID(t,'imgUse')) useClick(evt); else
         _log('x3 click');
         return;
-      } 
-      else 
+      }
+      else
        cleanUp('MC');
      }   else killId(dU);
   }
    killId(divLookup);
-      
+
 }
 
 var documentcontentEditable=false;
@@ -179,7 +142,7 @@ var divExtract;
 var escHnd;
 function setEscHnd(){
   if(!escHnd) escHnd=
-   document.addEventListener('keydown', escCleanup, false); 
+   document.addEventListener('keydown', escCleanup, false);
 }
 
 function cleanUp(s){
@@ -187,11 +150,11 @@ function cleanUp(s){
  var d=getId('divSourcetext');
  if(d) sT= d.value;
  killId('divDic');
- killId('divExtract'); 
- killId('divLookup'); 
- killId('divUse'); 
- killId('divBack'); 
- killId('divSelflag'); 
+ killId('divExtract');
+ killId('divLookup');
+ killId('divUse');
+ killId('divBack');
+ killId('divSelflag');
  killId('divTtsIfr');
 
  //divExtract='';
@@ -215,7 +178,7 @@ function useClick(e){
 }
 var last_tl, last_sl,_l_="/";
 function backLookup(e){
-    if(e.shiftKey || e.ctrlKey) { 
+    if(e.shiftKey || e.ctrlKey) {
     noMup=1;
     ttsRequest(txtSel,gt_tl, e.ctrlKey!=0);
     return;
@@ -227,7 +190,7 @@ function backLookup(e){
 //GET https://translate.google.com/?langpair=en|ru&text=Varnish
 //POST https://translate.google.com/translate_a/t?client=t&hl=ru&sl=en&tl=ru&text=Varnish
 function forwLookup(e){
-    if(e.shiftKey || e.ctrlKey)  { 
+    if(e.shiftKey || e.ctrlKey)  {
     noMup=1;
     ttsRequest(txtSel,gt_sl, e.ctrlKey!=0);
     return;
@@ -240,7 +203,7 @@ function forwLookup(e){
  var Gctrl, Galt;
  var sayTip="\n[shift / ctrl] listen (";
 function showLookupIcon(evt){
-  Gctrl=GM_getValue('ctrl',false), Galt=GM_getValue('alt',true);
+  Gctrl=GM_getValue('ctrl',false), Galt=GM_getValue('alt',false);
   if((!evt.ctrlKey && Gctrl)
     ||(!evt.altKey && Galt)
 //  to avoid collision
@@ -249,14 +212,14 @@ function showLookupIcon(evt){
    ||(evt.button!==0) // * 2016-01-03
   ) return;
   //! Fixed bug with incorrect mouse behavior on pages with Flash
-  // evt.preventDefault(),evt.stopPropagation(); 
+  // evt.preventDefault(),evt.stopPropagation();
 
   var divDic = getId('divDic');
   var divLookup = getId('divLookup');
   txtSel = getSelection(evt.target)+'';
 
-  if(txtSel.length>1024){  
-    return;  
+  if(txtSel.length>1024){
+    return;
   }
    //exit if no text is selected
    if(!txtSel || txtSel===""){
@@ -279,10 +242,10 @@ function showLookupIcon(evt){
     if(dU){
       if(!clickedInsideId('divUse')){
         killId(dU);
-      } return;        
+      } return;
      }
     try{
-    var p= belowCursor(evt,10,10,'r');
+    var p= belowCursor(evt,10,-20,'r');
     var divUse= buildEl('div', {id:'divUse',
     style:'z-index:110000; border: none'+
     ';top:'  + p.t  +';left:' + p.l  +';right:' + p.r +';bottom: auto;'
@@ -293,19 +256,19 @@ function showLookupIcon(evt){
     //border: 0, src: iTo,
     title: gt_sl_gms + '\u2192 '+gt_tl_gms +sayTip+gt_tl+')'},
     null, imgH+iTo+imgT);
-//    ['mousedown', forwLookup], imgH+iTo+imgT); 
+//    ['mousedown', forwLookup], imgH+iTo+imgT);
     divUse.appendChild(divForw);
-    
+
     var iFrom = getFlagSrc(gt_sl,'from');
     var divBack=buildEl('span', {id:'divGetback', //'class': 'gootranslink',  href: HREF_NO,
     //border: 0, src: iFrom,
     title: gt_tl_gms + '\u2192 '+gt_sl_gms +sayTip+gt_sl+')'},
     null, imgH+iFrom+imgT);
 //    ['mousedown', backLookup], imgH+iFrom+imgT);
-    gt_sl !='auto' && divUse.appendChild(divBack); 
+    gt_sl !='auto' && divUse.appendChild(divBack);
 
-    addEl(divUse,'img',{id: 'imgUse', border: 0, 
-    title: 'use in history\n[shift] add to history', src: imgUse}, 
+    addEl(divUse,'img',{id: 'imgUse', border: 0,
+    title: 'use in history\n[shift] add to history', src: imgUse},
     null,null);
 
 //    tp=(evt.clientY+window.pageYOffset+30)+'px';
@@ -320,7 +283,7 @@ function showLookupIcon(evt){
    if(divLookup)
       killId(divLookup);
    //div container
-  p = belowCursor(evt,10,10);
+  p = belowCursor(evt,10,-30);
    divLookup = buildEl('div', {id:'divLookup', style: 'z-index:100000'+
    ';border: none;' +
    ';top:'  + p.t  +';left:' + p.l  +';right:' + p.r  +';bottom: auto'
@@ -333,8 +296,8 @@ function showLookupIcon(evt){
   iFrom = getFlagSrc(sl,'from');
   var iBack=buildEl('img', {'border':0, id:"imgLookBack",  style: 'padding-left: 5px',
   src: iFrom},
-  ['mouseover', lookup], null); 
-   
+  ['mouseover', lookup], null);
+
   if(p.r == 'auto' ){ // left half
     divLookup.appendChild(iForw);
     sl != 'auto' && divLookup.appendChild(iBack);
@@ -346,7 +309,7 @@ function showLookupIcon(evt){
 }
 function escCleanup(e){
    if(!e.shiftKey && !e.ctrlKey && !e.altKey && e.keyCode==27 ){
-   cleanUp('esc'); 
+   cleanUp('esc');
    document.removeEventListener('keydown', escCleanup,false);
    escHnd=null;
   }
@@ -362,8 +325,8 @@ function lookup(evt){
   var txtS = txtSel; // 2012-08-20
    if(evt) txtSel = getSelection(inTextArea? inTextArea: evt.target)+'';
   if(!txtSel) txtSel = txtS;
-  if(txtSel.length>1024){  
-   return;  
+  if(txtSel.length>1024){
+   return;
   }
    //exit if no text is selected
    if(!txtSel || txtSel==""){
@@ -374,16 +337,16 @@ function lookup(evt){
       }
       killId('divLookup');
       killId('divDic');
-   
+
       return;
-   }  
+   }
    //cleanup divs
    killId('divDic');
    killId('divLookup');
-   //div container document.body.clientHeight/Width 
-   divDic = buildEl('div', 
+   //div container document.body.clientHeight/Width
+   divDic = buildEl('div',
   {id:'divDic', style: 'top:'+top+';left:'+left+';right:'+rite+
-   ';position:absolute!important;z-index:110000!important;'
+   ';position:absolute!important;z-index:999999999!important;'
   });
    divDic.addEventListener('mousedown', dragHandler, false);
   setEscHnd();
@@ -398,23 +361,23 @@ function lookup(evt){
     document.designMode='off';
 
    //div result
-   divResult = buildEl('div', 
+   divResult = buildEl('div',
   {id:'divResult'}, null, 'Loading...');
-   divDic.appendChild(divResult);      
-/**/ 
+   divDic.appendChild(divResult);
+/**/
   // history
   var divBottom = buildEl('div',{id:'divBottom', align: 'bottom'},null,null);
-   addEl(divBottom,'a', 
-  {'class':"gootransbutt gootranslink gtlPassive", id:'historyLink', title: 'Translation history',  
-   align: 'left', href:HREF_NO}, 
+   addEl(divBottom,'a',
+  {'class':"gootransbutt gootranslink gtlPassive", id:'historyLink', title: 'Translation history',
+   align: 'left', href:HREF_NO},
   ['click', history], 'History');
-  
-   addEl(divBottom,'a', 
-  {'class':"gootransbutt gootranslink gtlPassive", id:'sourceLink', title: 'Source', href:HREF_NO}, 
+
+   addEl(divBottom,'a',
+  {'class':"gootransbutt gootranslink gtlPassive", id:'sourceLink', title: 'Source', href:HREF_NO},
   ['click', source],'Source');
-  
+
    //options link
-   addEl(divBottom,'a', 
+   addEl(divBottom,'a',
   {'class':"gootransbutt gootranslink gtlPassive", id:'optionsLink', title: 'Settings', href:HREF_NO},
   ['click', options], 'Options');
   divDic.appendChild(divBottom);
@@ -495,15 +458,15 @@ function gtRequest(txt,s,t){
   last_sl = s; last_tl = t;
 }
 function Request(url,cb){
-  var Url=url, meth=(1 && cb)? 'POST': 'GET'; 
+  var Url=url, meth=(1 && cb)? 'POST': 'GET';
   var Data='';
-  var Hdr= {       
-        "User-Agent": UA 
+  var Hdr= {
+        "User-Agent": UA
        ,"Accept":  "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
        ,"Accept-Encoding":  "gzip, deflate"
        //,"Host": "www.google.com"
       }
-  if(1 && cb){ 
+  if(1 && cb){
     var Q=url.split('&q=');
     Url=Q[0];
     Data='&q='+Q[1];
@@ -522,7 +485,7 @@ function Request(url,cb){
           else
                 extractResult(resp.responseText);
         }
-      });   
+      });
 }
 
 function quickLookup(){
@@ -535,7 +498,7 @@ function quickLookup(){
 function histLookup(e){
   try{
   var txt=e.target.textContent, ix=-1;
-                //.innerHTML?? 
+                //.innerHTML??
   e.preventDefault();
   var ha = getTag('a',getId('divHist'));
 //  ix=ha.indexOf(e.target);
@@ -554,7 +517,7 @@ function histLookup(e){
   }
   var lang = ht[ix][2].match(/([a-zA-Z-]+)[\|\/]([a-zA-Z-]+)/);
   gt_sl=lang[1]; gt_tl=lang[2];
-  txtSel = txt; 
+  txtSel = txt;
    getId('divResult').innerHTML = 'Loading...'
   gtRequest(txtSel,gt_sl,gt_tl);
   } catch(e){console.log('broken history\n'+e)}
@@ -606,24 +569,24 @@ function extractResult(html){
    var _sl = detectedLang(gt_sl);
    var _tl = detectedLang(gt_tl);
 /* ?!11 150415 */ _log('**',_sl+'>'+_tl)
-    if( 1 || ex_sl !== gt_sl ) 
-      gt_sl_gms = _sl, gt_tl_gms =_tl; 
-    else 
+    if( 1 || ex_sl !== gt_sl )
+      gt_sl_gms = _sl, gt_tl_gms =_tl;
+    else
       gt_sl_gms = _tl, gt_tl_gms = _sl; /* ?!11 */
-  
+
   getId('divBottom').removeChild(getId('optionsLink'));
   var oL= buildEl('div', {id:'optionsLink', title: 'Settings', 'class':''},
   null, null);
-  addEl(oL,'a',{id:'optionsFrom','class':'gootransbutt gootranslink'},  
-  ['click', options],  gt_sl_gms +' '); 
-  addEl(oL,'a',{id:'optionsFast','class':'gootransbutt gootranslink', 
+  addEl(oL,'a',{id:'optionsFrom','class':'gootransbutt gootranslink'},
+  ['click', options],  gt_sl_gms +' ');
+  addEl(oL,'a',{id:'optionsFast','class':'gootransbutt gootranslink',
   title: 'swap languages'}, ['click', fastSwap], imgSwap);
-  addEl(oL,'a',{id:'optionsTo','class':'gootransbutt gootranslink ' + (getId('divOpt') ? 'gtlActive':'gtlPassive')},  
+  addEl(oL,'a',{id:'optionsTo','class':'gootransbutt gootranslink ' + (getId('divOpt') ? 'gtlActive':'gtlPassive')},
   ['click', options],  gt_tl_gms );
   addEl(oL,'a',{id: 'gtpGoogle','class':'gootransbutt gootranslink',
   title: 'translate.google.com', style: 'margin-left:12px;'
   }, ['click', goGoogle], imgGoGo);
-  
+
   getId('divBottom').appendChild(oL);
   }catch(e){ console.log('gather\n'+e); }
 // var translation = getXId("result_box").textContent;
@@ -635,13 +598,13 @@ function extractResult(html){
     gt_tl=GT_tl;
   }catch(e){console.log('auto?\n'+e)}
 
-   //parse info 
+   //parse info
   var dR=getId('divResult');
   var tx='translating..';
   try{
    tx=getXId("result_box").textContent
    // console.log("result:\n"+tx);
-  }catch(e){console.log("result_box\n"+e)} 
+  }catch(e){console.log("result_box\n"+e)}
    dR.innerHTML = '<div  id=gdptrantxt>'+
 //' class=gootranslink href=# target=_blank>' +  // +'<br>&nbsp;';
   tx + '</div>';
@@ -663,9 +626,9 @@ function getSelection(t){
       txt = document.getSelection();
    }else if (document.selection) {
       txt = document.selection.createRange().text;
-   } 
+   }
   inTextArea= ( t&& t.type&&  (/^(text|search)/i).test(t.type)) ? t : null;
-  if(inTextArea){ 
+  if(inTextArea){
    txt=t.value.substr(t.selectionStart,t.selectionEnd-t.selectionStart);
   }
    return ltAmp(trim(txt));
@@ -703,11 +666,11 @@ function options(evt){
     addEl(dO,'a',{'class':'gootransbutt gootranslink',
     target:'_blank', href:senoj, title: 'choose country flag icon'},
     ['click',function(e){
-     e.preventDefault(); GM_openInTab(senoj); cleanUp(); return false;}], 
+     e.preventDefault(); GM_openInTab(senoj); cleanUp(); return false;}],
     imgH+imgFlags['AN']+imgT);
       addEl(dO,'span', null, null,' From: ');
     var gt_slist = getXId("gt-sl");
-    gt_slist= gt_slist ? gt_slist.innerHTML+'' : languagesGoogle; 
+    gt_slist= gt_slist ? gt_slist.innerHTML+'' : languagesGoogle;
 /* console.log(gt_slist) /* !!! */
 
     var oF =dO.appendChild(buildEl('select', {id:'optSelLangFrom'}, null, gt_slist));
@@ -724,7 +687,7 @@ function options(evt){
     var oT =dO.appendChild(buildEl('select', {id:'optSelLangTo'}, null, gt_tlist));
       oT.value = GM_getValue('to', "auto");
       oT.addEventListener('change', quickLookup, false);
-      //use ctrl 
+      //use ctrl
       addEl(dO,'br');
       addEl(dO,'span', null, null,'Use with: ');
       var d=addEl(dO,'input', {id:'checkCtrl', type:'checkbox'},
@@ -732,10 +695,10 @@ function options(evt){
       addEl(dO,'span', null, null,' Ctrl &nbsp;&nbsp; ');
       d.checked = GM_getValue('ctrl',false);
     // use alt
-      d=addEl(dO,'input', {id:'checkAlt', type:'checkbox', 
+      d=addEl(dO,'input', {id:'checkAlt', type:'checkbox',
     title:'using Alt is highly recommended'},
     ['change', saveIt],  null);
-      addEl(dO,'span', null, 
+      addEl(dO,'span', null,
     null,' Alt &nbsp;&nbsp;&nbsp; History:&nbsp;');
       d.checked = GM_getValue('alt',true);
 //    history depth
@@ -743,7 +706,7 @@ function options(evt){
     style: "width:2em; ", title: "set to 0 to clear history"});
       addEl(dO,'span', null, null,' items &nbsp; of ');
       d.value = maxHT;
-// max # words in phrase 
+// max # words in phrase
       d=addEl(dO,'input', {id:'histWc', type:'textbox',  maxlength: 1,
     style: "width:1em; ", title: "max # of words in phrase"});
       addEl(dO,'span', null, null,' words');
@@ -751,7 +714,7 @@ function options(evt){
       //save
     var oS=
       addEl(dO,'span', {id:'gtp-save', 'class':'gootranslink gootransbutt',
-    title: "save changes"}, 
+    title: "save changes"},
     ['click', saveOptions], 'save');
     if(!GM_getValue('from'))
       saveIt();
@@ -780,7 +743,7 @@ function options(evt){
      (ii==0?'margin-left:6px' :'')
      }, null,'&nbsp;');
      b.paletteN=ii;
-     b.addEventListener('click',bgClick,false); 
+     b.addEventListener('click',bgClick,false);
     }
     getId('optionsTo').className='gootransbutt gootranslink gtlActive';
       //cancel
@@ -793,7 +756,7 @@ function options(evt){
    }
 }
 function showTrans(){
-try{ 
+try{
  var hOs = GM_getValue('showTrans',false) !== true;
  var shhi = hOs?'gtp-trans gtp-block':'gtp-trans gtp-hide';
  var tds= document.getElementsByClassName('gtp-trans');
@@ -825,7 +788,7 @@ function altListClick(e){
   o.textContent=t.textContent;
   // addSource??? addHist???
   var a=outerNode(o,'DIV').getElementsByTagName('I');
-  txr=''; 
+  txr='';
   for(var i=0,il=a.length;i<il;i++)
     txr+=(i?' ':'')+a[i].textContent;
  }catch(e){console.warn('aLC err:\n'+e);}
@@ -842,15 +805,15 @@ try{
    throw 'Bad Google responce!!1' +'\n' +txt;
  txt=txt.replace(/,(?=,)/g,',""');
  txt=txt.replace(/\[(?=,)/g,'[""');
- 
+
  var dA=JSON.parse(txt);
  var dL='';
  var punctRE=/^[\s\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]+$/;
 //translation
  var A= dA[5];
  sp='',sx='', tx='', txr="", tr="";
- try{ 
- if(A) 
+ try{
+ if(A)
  for( j=0,jl=A.length; j<jl; j++){
     if( !(A[j][2] && A[j][2][0] )) continue;
     tx=A[j][2][0][0],sx=A[j][0];
@@ -860,7 +823,7 @@ try{
     if(kl==1 && punctRE.test(tx)){
      tr+=sp+'<i>'+tx+'</i> ';
     }else{
-     tr+=sp+'<span><i>'+tx+'</i><ul>'; 
+     tr+=sp+'<span><i>'+tx+'</i><ul>';
      for( k=1; k<kl; k++){
       tr+='<li>'+ A[j][2][k][0]+'</li>';
      }
@@ -870,10 +833,10 @@ try{
   else // !A
    tr=txr=dA[0][0][0];
   }catch(e){console.warn(e+'\nBAD RESP\n'+txt); throw 'BAD RESP!!1';};
-  
+
   var puRE=/\s+([.,?!;:])/g;
   tr=tr.replace(puRE,"$1");
-  txr=txr.replace(puRE,"$1"); 
+  txr=txr.replace(puRE,"$1");
   if(!txr) { getId('divResult').innerHTML='Google returns nothing!'; return; }
   var dR=getId('divResult');
   dR.childNodes[0].innerHTML=tr;
@@ -890,7 +853,7 @@ try{
   title: 'copy translation','z-index':'100505'
   },
   ['click',txtClip],'');
-  
+
 // detected lang
   if(gt_sl=='auto' && dA[2]){
    var oF = getId("optionsFrom");
@@ -931,16 +894,16 @@ try{
      history();
   if(!GM_getValue('histWc') && !getId('divOpt')) // no settings?
      options(); // show options
-     
+
 } catch(e){   console.warn('errexDict: '+e+'\n'+txt);   badResponce(txt,e);}
 }
 //
 function onTimerDict(){
  var tk=googleTK(txtSel,dictSL);
- dictSL=tk.SL; 
- var q = dictURL + 
- "&hl="+ GM_getValue('to','auto') + 
- "&sl=" + gt_sl + "&tl=" + gt_tl + 
+ dictSL=tk.SL;
+ var q = dictURL +
+ "&hl="+ GM_getValue('to','auto') +
+ "&sl=" + gt_sl + "&tl=" + gt_tl +
 "&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at&ie=UTF-8&oe=UTF-8&otf=2&trs=1&inputm=1&ssel=0&tsel=0&source=btn&kc=3"+
  "&tk="+tk.tk+
  "&q="+ escAp(txtSel);
@@ -981,21 +944,21 @@ function source(){
  divSource= buildEl('form', {id:'divSourceshow'}, null, null);
 
  if(sT){
-  var sTa= sT.split('\n'); 
+  var sTa= sT.split('\n');
   var tS= txtSel + ' \u2192 ' + trim(txr);
   if(tS != sTa[0]){
-   while(sTa.length >= sourceDP) sTa.pop(); 
+   while(sTa.length >= sourceDP) sTa.pop();
    sT=  tS + '\n' + sTa.join('\n');
   }
  }else sT=txtSel;
  if(!getId('imgSourcesave'))
  insAfter(
   buildEl('img',{id: 'imgSourcesave', title: 'save source', src: imgSave,
-  style: 'margin-bottom: -3px;'},  
+  style: 'margin-bottom: -3px;'},
   ['click', saveSource], null)
   ,getId('sourceLink'));
- addEl(divSource,'textarea', 
- { id:'divSourcetext', rows: sourceDP, 
+ addEl(divSource,'textarea',
+ { id:'divSourcetext', rows: sourceDP,
   style: "font-family: Tahoma,sans-serif !important; height:"
          +(sourceBH+1)+"em;"
  }, null, sT),
@@ -1004,7 +967,7 @@ function source(){
  sL.innerHTML = 'Source';
  sL.className= 'gootransbutt gootranslink gtlActive';
  sL.title = 'Hide source';
- 
+
  }catch(e){console.log('Sourceshow\n'+e)};
  insAfter(divSource,getId('divResult'));
 }
@@ -1024,7 +987,7 @@ function history(){
   if(!maxHT) return;
   GM_setValue('histShow',true);
    divHist = buildEl('div', {id:'divHist'},['click', histLookup], null );
-// 
+//
   for(var i=0, l=ht.length; i<l; i++){
     var bkg = ht[i][0].indexOf(' ')>0 ? ' goohistlink' : '';
     addEl(divHist,'a', {href:HREF_NO, 'class': 'gootranslink'+bkg, 'titel': ht[i][1]+
@@ -1073,7 +1036,7 @@ function saveOptions(evt){
    GM_setValue('from', from);
    GM_setValue('to', to);
    GM_setValue('ctrl', ctrl);
-   GM_setValue('alt', alt);
+   GM_setValue('alt', false);
    GM_setValue('sourceBH', sourceBH);
    GM_setValue('sourceDP', sourceDP);
   GM_setValue('noFlags',nf)
@@ -1109,7 +1072,7 @@ function addHistory(src,trt){
   }
   ht.splice(ix,1);
  }
-// if(hits<4) 
+// if(hits<4)
  hits++; // delete it by your own hands
  if (ht.length>maxHT){
   var minHit=99999; // which item shoud i remove?
@@ -1140,8 +1103,8 @@ function selFlag(e){
  'class':'gootransbutt gootranslink', title: "use icon"},
  ['click',  function(){saveFlag(true)}], '<b>OK</b>');
  addEl(dsf,'a', {href:HREF_NO,  style:'padding: 3px 4px;',
- 'class':'gootransbutt gootranslink'},  
- ['click', function(){saveFlag(false)}], 
+ 'class':'gootransbutt gootranslink'},
+ ['click', function(){saveFlag(false)}],
  '<b>Cancel</b>');
  //
   senFlag = e.target.src+'';
@@ -1175,7 +1138,7 @@ function belowCursor(evt,ho,vo,lr){
   var w = window.innerWidth;
   var r=(w-(evt.clientX+window.pageXOffset)+ho);
 // Q: How to detect visibility & thickess of vertical scrollbar?
-  r-=8; // 
+  r-=8; //
   if(r<0) r= w/4;
   r+='px';
   if(lr && lr=='l')
@@ -1213,7 +1176,7 @@ function flagRequest(f){
    url: f,
   //binary: true,
   overrideMimeType: "text/plain; charset=x-user-defined",
-  headers: {       
+  headers: {
     "User-Agent": UA
    ,"Accept":  "image/png,image/*;q=0.8,*/*;q=0.5"
    ,"Accept-Encoding":  "gzip, deflate"
@@ -1223,7 +1186,7 @@ function flagRequest(f){
        flagStore(resp.responseText,f);
       }catch(e){console.log('FlagRqst\n'+e);}
    }
- });  
+ });
 }
 function flagStore(r,url){
  if(r.indexOf("<head")>=0)
@@ -1243,7 +1206,7 @@ function killId(nod){
  if(!nod) return;
  var n = nod;
  if(typeof n == 'string'){
-  n= getId(nod); 
+  n= getId(nod);
  }
  if(!n) return;
  if(n.parentNode) n.parentNode.removeChild(n);
@@ -1262,8 +1225,8 @@ function buildEl(type, attrArray, eL, html)
    }
    if(eL){
       node.addEventListener(eL[0], eL[1], eL[2]?true:false);
-   } 
-   if(html) 
+   }
+   if(html)
       node.innerHTML = html;
    return node;
 }
@@ -1271,14 +1234,14 @@ function buildEl(type, attrArray, eL, html)
 function getId(id, parent){
    if(!parent)
       return document.getElementById(id);
-   return parent.getElementById(id);   
+   return parent.getElementById(id);
 }
 
 /* */
 function getXId(id){
    var r=divExtract.getElementById(id);
    if(r) return r;
-   throw "Xel bug " + id; 
+   throw "Xel bug " + id;
 }
 
 function getTag(name, parent){
@@ -1296,7 +1259,7 @@ var dragXoffset=0;                              // How much we've moved the elem
 var dragYoffset=0;                              // How much we've moved the element on the verticle
 var didDrag=false;                        //set to true when we do a drag
 function moveHandler(e){
-   if (e == null) return;// { e = window.event } 
+   if (e == null) return;// { e = window.event }
    if ( e.button<=1 && dragOK ){
       savedTarget.style.left = e.clientX - dragXoffset + 'px';
       savedTarget.style.top = e.clientY - dragYoffset + 'px';
@@ -1315,14 +1278,14 @@ function dragHandler(e){
    if (e == null) return;//
    var target = e.target;// != null ? e.target : e.srcElement;
    orgCursor=target.style.cursor;
-   if(target.nodeName!='DIV' )   
+   if(target.nodeName!='DIV' )
     return;
   if( e.ctrlKey || e.altKey || e.shiftKey)
     return; // enable selection inside
    else if(clickedInsideID(target, res_dict))
       return;
    if (target = clickedInsideID(target, 'divDic')) {
-      savedTarget=target;       
+      savedTarget=target;
       target.style.cursor=htype;
       dragOK=true;
       dragXoffset = e.clientX-target.offsetLeft;
@@ -1355,9 +1318,9 @@ function b2b64(inp) { // binary data --> base64
   var len = inp.length;
   while( i < len ){
     c1 = inp.charCodeAt(i++); c2 = inp.charCodeAt(i++); c3 = inp.charCodeAt(i++);
-    e1 = (c1&255) >> 2; 
+    e1 = (c1&255) >> 2;
     e2 = ((c1 & 3) << 4) | ((c2&255) >> 4);
-    e3 = ((c2 & 15) << 2) | ((c3&255) >> 6);  
+    e3 = ((c2 & 15) << 2) | ((c3&255) >> 6);
     e4 = c3 & 63;
     if( isNaN(c3)) e4 = 64;
     if( isNaN(c2)) e3 = 64;
@@ -1424,8 +1387,8 @@ function stickStyle(css){
 function css(n){
   var k,i=0;
   _log('cssN:',n);
-  if(-1 === n){ try{ 
-    k= +(GM_getValue('backG',0)); 
+  if(-1 === n){ try{
+    k= +(GM_getValue('backG',0));
     if(0<=k && k< BG.C.length) i=k;
   } catch(e){};}
   else GM_setValue('backG', +(i=+n) );
@@ -1460,7 +1423,7 @@ color:'+FG.t[i]+'\
 '.gootranslink, #divDic .gootranslink ,#divSelflag .gootranslink\
 {color:'+FG.l[i]+'!important; text-decoration: none !important;\
 font: small normal Tahoma,sans-serif !important;'+
-'cursor:pointer !important; }'  +  
+'cursor:pointer !important; }'  +
 '#divDic a.gootranslink:visited,\
  #divDic a.gootranslink:hover,\
  #divDic a.gootranslink:active\
@@ -1486,7 +1449,7 @@ height:1.5em!important; min-height:1.5em!important;\
 color:'+FG.t[i]+'!important;\
 padding-bottom: 3px !important; margin-bottom: 4px!important;}'+
 '#divExtract{word-spacing: normal !important;}'+
-'#divBottom {position: relative; width: 100%; font-size: smaller; text-decoration:none; }'+    
+'#divBottom {position: relative; width: 100%; font-size: smaller; text-decoration:none; }'+
 '#historyLink {display: inline; position: relative; font-size:smaller; text-decoration:none;}'+
 '#sourceLink {display: inline; position: relative; margin-left: 1em;  font-size:smaller; text-decoration:none;}'+
 '#imgSourcesave {display: inline; position: relative; margin-left:2px;\
@@ -1494,10 +1457,10 @@ cursor:pointer;}'+
 'div#optionsLink {display: inline; position: relative; margin-left: 1.5em; font-size:smaller !important; text-decoration:none !important;}'+
 '#divDic #optionsLink [id^="options"] {margin-right: 2px; padding-left: 2px;}'+
 '#divOpt {position: relative; padding: 5px;'+
-'border-top: thin solid grey!important;}'+ 
+'border-top: thin solid grey!important;}'+
 '#divLookup, #divOpt, #divBottom,#divSourcetext,#divHist,#divuse {direction: ltr !important;}'+
 'div#divDic #divHist {background:'+BG.C[i]+'!important;; position:relative; padding:5px; text-align:left !important;'+
-'border-top: thin solid grey!important; color:'+FG.t[i]+'!important;}'+ 
+'border-top: thin solid grey!important; color:'+FG.t[i]+'!important;}'+
 'div#divResult #gtp_dict {background:'+BG.C[i]+'!important;color:'+FG.t[i]+'!important;\
  padding:3px!important; border-radius:3px;'+
 'margin-bottom: .1em!important; overflow-y:auto !important; overflow-x:hidden; font-size:small;}'+
@@ -1507,7 +1470,7 @@ cursor:pointer;}'+
 'div#divDic>#divSourceshow {\
 border: none; padding: 0 0 4px 0; margin: 0;}'+
 '#divSourceshow>#divSourcetext{ width:97%; height: 3em; line-height: 1.2; overflow: auto !important;\
-padding: 0 0 0 4px; margin: 0; border: none; border-top: 1px solid #AAA}' + 
+padding: 0 0 0 4px; margin: 0; border: none; border-top: 1px solid #AAA}' +
 '.gtlPassive:before{ content:"\u2193";}'+
 '.gtlActive:before{ content:"\u2191" !important;}'+
 '#imgUse, #divGetback, #divGetforw {margin-left: 5px !important; cursor: pointer;}'+
@@ -1597,7 +1560,7 @@ if(-1 !== n) return;
 stickStyle(
 '#divDic, #divDic textarea, #divDic iframe {resize: both !important; }'+
 '#divDic *::'+(isChrome?'':moz)+'selection {background: #047 !important; color: #FC8 !important; }'+
-'#divUse img, #divDic img, #divLookup img {display: inline; width: auto; height: auto; }'+ 
+'#divUse img, #divDic img, #divLookup img {display: inline; width: auto; height: auto; }'+
 '#divTtsLnk:after{ content:url('+imgPlay+') }'+
 '#divTtsLnk {padding: 0 2px; margin: 0 3px 0 5px;}'+
 '#divTtsIfh {width: 100%;overflow-x:hidden;\
@@ -1654,7 +1617,7 @@ function insAfter(n,e){
    e.parentNode.insertBefore(n,e.nextElementSibling);
   }else{
    e.parentNode.appendChild(n);
-  } 
+  }
 }
 function insBefore(n,e){
    e.parentNode.insertBefore(n,e);
@@ -1662,7 +1625,7 @@ function insBefore(n,e){
 function outerNode(target, node) {
  var t=target;
  if (t.nodeName==node) return t;
-  if (t.parentNode) 
+  if (t.parentNode)
   while (t = t.parentNode){
    if (t.nodeName && t.nodeName==node)
     return t;
@@ -1769,7 +1732,7 @@ imgFlags= {
 ,"pl":"Poland"
 ,"pt":"Brazil"
 ,"pa":"Pakistan"
-,"ro":"Romania" 
+,"ro":"Romania"
 /*, "ru":"Russia"*/
 ,"sr":"Serbia"
 ,"st":"Lesotho"
@@ -1807,7 +1770,7 @@ try{
 body=
  window.document.body;
 
-maxHT=GM_getValue('histSize'); 
+maxHT=GM_getValue('histSize');
 if(!maxHT) maxHT=20;
 maxWC=GM_getValue('histWc');
 if(!maxWC) maxWC=3;
@@ -1820,7 +1783,7 @@ if( av!= version ){
   GM_setValue('version',version);
 }
 sT=GM_getValue('sourceText');
-if (sT){ 
+if (sT){
  try{
   sT=JSON.parse(sT);
  }catch(e){console.log('broken source\n'+e)} ;
@@ -1890,10 +1853,10 @@ function deURI(u,m){
   return decodeURIComponent(u).split(' ').slice(0,9).join(' ');
 }
  var uq=location.href.match(/^https:\/\/translate\.google\.[a-z]{2,3}\/translate_tts\?client\=t\&.+?(\&q\=.+)/);
- if(uq && uq[1]) 
+ if(uq && uq[1])
   window.document.title=deURI(uq[1]);
 
- GM_registerMenuCommand("translate.google tootip", function(){ 
+ GM_registerMenuCommand("translate.google tootip", function(){
   txtSel = getSelection(null) || txtSel;
   var p = {t: (pageYOffset+10)+"px",l:(window.pageXOffset+50)+"px", r:"auto" }
   if(!isInited) {css(-1); isInited=true; }
@@ -1903,7 +1866,7 @@ function deURI(u,m){
   }, null, null);
   if(!txtSel) txtSel="Google Translator";
   body.appendChild(divLookup);
-  lookup(); 
+  lookup();
   }
  );
 
