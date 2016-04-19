@@ -11,6 +11,7 @@
 //  about:config -> greasemonkey.fileIsGreaseable <- true
 // @homepageURL https://github.com/byaka/translate.google-tooltip
 // @version 0.11
+// @version_original 16.03.09
 // /grant GM_addStyle
 // @grant GM_getValue
 // #grant GM_log
