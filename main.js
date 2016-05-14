@@ -10,8 +10,8 @@
 // @include        file://*
 //  about:config -> greasemonkey.fileIsGreaseable <- true
 // @homepageURL https://github.com/byaka/translate.google-tooltip
-// @version 0.11
-// @version_original 16.03.09
+// @version 0.12
+// @version_original 16.05.13
 // /grant GM_addStyle
 // @grant GM_getValue
 // #grant GM_log
@@ -78,7 +78,7 @@ var ht=null;  // history table,
 var imgForw,imgBack,imgSwap,imgUse,imgSave,imgFlags,imgForwSrc,imgBackSrc,imgClip,imgGoGo;
 var txtSel; // text selected
 var currentURL, Qtxt='***'; var e6 =999999;
-var ampTK;// = Math.round(Math.random()*e6)+"."+Math.round(Math.random()*e6);
+var TKK;// = Math.round(Math.random()*e6)+"."+Math.round(Math.random()*e6);
 var gt_sl_gms, gt_tl_gms, gt_sl, gt_tl;
 
 var sT;
@@ -558,6 +558,17 @@ function extractResult(html){
   if(!html2){ // too many lettters!!!11
     badResponce(html);   return;
   }
+  //-----------------------------------------------------------------------------------
+  // TKK=eval('((function(){var a\x3d4264492758;var b\x3d-1857761911;return 406375+\x27.\x27+(a+b)})())');
+  var res = /;TKK=(.*?\'\));/i.exec(html);
+  if (res != null) {
+    var res2 = /var a=(.*?);.*?var b=(.*?);.*?return (\d+)/i.exec(res[1].replace(/\\x3d/g, '='));
+    if (res2 != null) {
+      TKK = Number(res2[3]) + '.' + (Number(res2[1]) + Number(res2[2]));
+    }
+  }
+
+//-----------------------------------------------------------------------------------
      html2 = html2[1].replace(/\<script[^\<]+\<\/script\>/g, '');//remove script tags...
      killId('divExtract');
     divExtract = (new DOMParser()).parseFromString(html2, "text/html");
@@ -1341,41 +1352,48 @@ function escAp(s){
 }
 // &tk=[
 function googleTK(text, SL) {
-   // view-source:https://translate.google.hu/translate/releases/twsfe_w_20151214_RC03/r/js/desktop_module_main.js
-   var SL = (SL) ? SL : null;
-   var QL=function(a){return function(){return a}};
+   // view-source:https://translate.google.com/translate/releases/twsfe_w_20151214_RC03/r/js/desktop_module_main.js && TKK from HTML
+   var uM = TKK ; // 160513 '406423.4167013162'; //
    var cb="&";
    var k="";
-   var mf="=";
-   var RL=function(a,b){for(var c=0;c<b.length-2;c+=3){var d=b.charAt(c+2),d=d>=t?d.charCodeAt(0)-87:Number(d),d=b.charAt(c+1)==Tb?a>>>d:a<<d;a=b.charAt(c)==Tb?a+d&4294967295:a^d}return a};
+   var Gf="=";
    var Vb="+-a^+6";
    var t="a";
-   var Tb="+";
-   var Ub="+-3^+b+-f";
-   var dd=".";
-   var TL=function(a){
+   var Yb="+";
+   var Zb="+-3^+b+-f";
+   var jd=".";
+   var sM=function(a){return function(){return a}}
+   var tM=function(a,b){for(var c=0;c<b.length-2;c+=3){var d=b.charAt(c+2),d=d>=t?d.charCodeAt(0)-87:Number(d),d=b.charAt(c+1)==Yb?a>>>d:a<<d;a=b.charAt(c)==Yb?a+d&4294967295:a^d}return a};
+   var vM=function(a){
       var b;
-      if(null===SL){
-         SL = Math.floor(Math.random() * 1000000);
+      if(null!==uM) {
+         b=uM;
+      }else{
+         b=sM(String.fromCharCode(84));var c=sM(String.fromCharCode(75));b=[b(),b()];
+         b[1]=c();
+         b=(uM=window[b.join(c())]||k)||k
       }
-      b=SL;
-      var d=QL(String.fromCharCode(116)),
-      c=QL(String.fromCharCode(107)),
-      d=[d(),d()];
+      var d=sM(String.fromCharCode(116)),c=sM(String.fromCharCode(107)),d=[d(),d()];
       d[1]=c();
-      for(var c=cb+d.join(k)+mf,d=[],e=0,f=0;f<a.length;f++){
-         var g=a.charCodeAt(f);
-         128>g?d[e++]=g:(2048>g?d[e++]=g>>6|192:(55296==(g&64512)&&f+1<a.length&&56320==(a.charCodeAt(f+1)&64512)?(g=65536+((g&1023)<<10)+(a.charCodeAt(++f)&1023),d[e++]=g>>18|240,d[e++]=g>>12&63|128):d[e++]=g>>12|224,d[e++]=g>>6&63|128),d[e++]=g&63|128)
+      c=cb+d.join(k)+Gf;
+      d=b.split(jd);
+      b=Number(d[0])||0;
+
+      for(var e=[],f=0,g=0;g<a.length;g++){
+         var m=a.charCodeAt(g);
+         128>m?e[f++]=m:(2048>m?e[f++]=m>>6|192:(55296==(m&64512)&&g+1<a.length&&56320==(a.charCodeAt(g+1)&64512)?(m=65536+((m&1023)<<10)+(a.charCodeAt(++g)&1023),e[f++]=m>>18|240,e[f++]=m>>12&63|128):e[f++]=m>>12|224,e[f++]=m>>6&63|128),e[f++]=m&63|128)
       }
       a=b||0;
-      for(e=0;e<d.length;e++) { a+=d[e],a=RL(a,Vb); }
-      a=RL(a,Ub);
+      for(f=0;f<e.length;f++) { a+=e[f],a=tM(a,Vb)};
+      a=tM(a,Zb);
+      a^=Number(d[1])||0;
       0>a&&(a=(a&2147483647)+2147483648);
       a%=1E6;
+//    return c+(a.toString()+jd+(a^b))
+      return a.toString()+jd+(a^b);
+   };
 
-      return a.toString()+dd+(a^b);
-   }
-   return { 'tk' : TL(text), 'SL' : SL };
+   return { 'tk' : vM(text), 'SL' : uM };
 }
 // ]&tk=
 function stickStyle(css){
