@@ -10,7 +10,7 @@
 // @include        file://*
 //  about:config -> greasemonkey.fileIsGreaseable <- true
 // @homepageURL https://github.com/byaka/translate.google-tooltip
-// @version 0.13
+// @version 0.14
 // @version_original 17.03.11
 // @grant GM_getValue
 // @grant GM_openInTab
