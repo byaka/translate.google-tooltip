@@ -1488,17 +1488,17 @@ function css(n){
 stickStyle(
 '#divDic, #divDic div, #divDic span, #divDic a, #divDic img, #divLookup, #divUse  {padding: 0; margin:0; \
 width: auto;height: auto; border: none; border-radius: 0; background: none; box-shadow: none\}'+
-'#divResult {overflow: visible !important; padding:3px !important; margin: 0 5px 3px 0 !important; '+
+'#divResult {overflow: visible !important; padding:3px !important; margin: 0 5px 0 0 !important; '+  //[FIXED] margin bottom to 0
 'position: relative; z-index: auto !important;}'+
 '#gtp_dict {max-height: 480px !important; overflow: auto !important;}'+
-'#divResult table *{ line-height: 1 !important}'+
+'#divResult table *{ line-height: 1 !important}'+ ////[FIXED] So huge font, need smaller
 '#divDic, #divDic *, #divSelflag, #divSelflag *{\
 font-family: Tahoma, sans-serif!important;\
-font-size:medium!important;\
-font-style: normal!important;\
-font-weight: normal!important;\
-font-stretch: normal!important;\
-letter-spacing: normal!important;\
+font-size: 9px !important;\
+font-style: normal !important;\
+font-weight: normal !important;\
+font-stretch: normal !important;\
+letter-spacing: normal !important;\
 line-height: 1.1;\
 color:'+FG.t[i]+'\
 }'+
@@ -1510,7 +1510,7 @@ color:'+FG.t[i]+'\
 '#divSelflag{ max-width: 180px; }'+
 '.gootranslink, #divDic .gootranslink ,#divSelflag .gootranslink\
 {color:'+FG.l[i]+'!important; text-decoration: none !important;\
-font: normal medium Tahoma,sans-serif !important;'+
+font: 9px Tahoma,sans-serif !important;'+  //[FIXED] So huge font, need smaller
 'cursor:pointer !important; }'  +
 '#divDic a.gootranslink:visited,\
  #divDic a.gootranslink:hover,\
@@ -1557,8 +1557,8 @@ cursor:pointer;}'+
  padding: 3px; margin: 0;}'+
 '#divDic>#divSourceshow {\
 border: none; padding: 0 0 4px 0; margin: 0;}'+
-'#divSourceshow>#divSourcetext{ width:97%; height: 3em; line-height: 1.2; overflow: auto !important;\
-padding: 0 0 0 4px; margin: 0; border: none; border-top: 1px solid #AAA}' +
+//[FIXED] Added 'min-height' and also 'border-radius' for disallow conflicts in some sites.
+'#divSourceshow>#divSourcetext{ width:97%; height: 3em; min-height: 3em; border-radius: 0; line-height: 1.2; overflow: auto !important; padding: 0 0 0 4px; margin: 0; border: none; border-top: 1px solid #AAA}' +
 '.gtlPassive:before{ content:"\u2193";}'+
 '.gtlActive:before{ content:"\u2191" !important;}'+
 '#imgUse, #divGetback, #divGetforw {margin-left: 5px !important; cursor: pointer;}'+
@@ -1583,8 +1583,8 @@ padding: 0 0 0 4px; margin: 0; border: none; border-top: 1px solid #AAA}' +
 '#gtp_dict .gtp-hide {display: none}'+
 '#gtp_dict .gtp-block {display: block}'+
 '#divTtsIfr{position: relative;padding: 0!important;margin:3px 0 0 0!important;\
-background:'+ BG.C[i] +'!important; color:'+FG.t[i]+'!important;}'+
-'#gdptrantxt {font-size: 1em !important; line-height: 1;\
+background:'+ BG.C[i] +'!important; color:'+FG.t[i]+'!important;}'+ //[FIXED] So huge font, need smaller
+'#gdptrantxt {font-size: 11px !important; line-height: 12px;\
  position: relative;\
  z-index:100500 !important;\
  margin: 0 auto 4px auto  !important;\
@@ -1661,10 +1661,10 @@ border-width: 1px 1px 1px 8px; }\
 
 if(-1 !== n) return;
 stickStyle(
+'#gdptrantxt * {font-size: 11px !important;}'+  //[FIXED] restored font-size
 '#divDic, #divDic textarea, #divDic iframe {resize: both !important; }'+
 '#divDic *::'+(isChrome?'':moz)+'selection {background: #047 !important; color: #FC8 !important; }'+
-'#divUse img, #divDic img, #divLookup img {display: inline; width: auto; height: auto;\
-margin: 0; padding:0; vertical-align: baseline !important;}'+
+'#divUse img, #divDic img, #divLookup img {display: inline; max-height: 11px; max-width: 14px; width: auto; height: auto; margin: 0; padding:0; vertical-align: baseline !important;}'+  //[FIXED] So huge font, need smaller. Also fixed incorrect linebreak for 'margin'.
 '#divTtsLnk:after{ content:url('+imgPlay+');}'+
 '#divTtsLnk {padding: 0 2px; margin: 0 2px 0 2px !important;}'+
 '#divTtsIfh {width: 100%;overflow-x:hidden;\
@@ -1676,9 +1676,9 @@ background-color: rgba(127,127,127,.25); padding: 3px 0 !important;\
 #divDic img, #divDic input, #divDic textarea, #divDic label, #divDic li\
 { padding:0 0 0 0; margin: 0 0 0 0; background: none repeat scroll 0 0 transparent;\
   border: none; line-height: 1.2; float: none}'+
-'#divOpt input { padding: 4px 0 !important;}\
-div#divBottom{padding-top: 3px;}\
-.gootransbutt#optionsLink{margin-top:0; padding-top: 3px; padding-bottom: 1px;}\
+'#divOpt input { padding: 4px 0 !important;}'+
+'div#divBottom{padding-top: 0; margin-top: -6px;}'+  //[FIXED] lowered 'padding-top' and 'margin-top'
+'.gootransbutt#optionsLink{margin-top:0; padding-top: 3px; padding-bottom: 1px;}\
 #divOpt .gtBGColor{ border:thin solid blue !important; cursor: pointer;\
 padding-right:6px; margin-right: 2px;}\
 .gootranslink[titel]{position: relative;}\
