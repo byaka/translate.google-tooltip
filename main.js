@@ -10,7 +10,7 @@
 // @include        file://*
 //  about:config -> greasemonkey.fileIsGreaseable <- true
 // @homepageURL https://github.com/byaka/translate.google-tooltip
-// @version 0.14
+// @version 0.15
 // @version_original 17.03.11
 // @grant GM_getValue
 // @grant GM_openInTab
@@ -1491,17 +1491,17 @@ width: auto;height: auto; border: none; border-radius: 0; background: none; box-
 '#divResult {overflow: visible !important; padding:3px !important; margin: 0 5px 0 0 !important; '+  //[FIXED] margin bottom to 0
 'position: relative; z-index: auto !important;}'+
 '#gtp_dict {max-height: 480px !important; overflow: auto !important;}'+
-'#divResult table *{ line-height: 1 !important}'+ ////[FIXED] So huge font, need smaller
-'#divDic, #divDic *, #divSelflag, #divSelflag *{\
-font-family: Tahoma, sans-serif!important;\
-font-size: 9px !important;\
-font-style: normal !important;\
-font-weight: normal !important;\
-font-stretch: normal !important;\
-letter-spacing: normal !important;\
-line-height: 1.1;\
-color:'+FG.t[i]+'\
-}'+
+'#divResult table *{ line-height: 1 !important}'+
+'#divDic, #divDic *, #divSelflag, #divSelflag *{'+
+'font-family: Tahoma, sans-serif!important;'+
+'font-size: 1.5vh !important;'+  //[FIXED] So huge font, need smaller
+'font-style: normal !important;'+
+'font-weight: normal !important;'+
+'font-stretch: normal !important;'+
+'letter-spacing: normal !important;'+
+'line-height: 1.1;'+
+'color:'+FG.t[i]+
+'}'+
 '#divDic,#divSelflag {position: absolute; background:'+BG.C[i]+'!important; color:'+FG.t[i]+
 '!important; opacity: 1'+
 ';padding:5px !important; margin:0; border-radius:5px; border: thin solid  gray'+
@@ -1510,7 +1510,7 @@ color:'+FG.t[i]+'\
 '#divSelflag{ max-width: 180px; }'+
 '.gootranslink, #divDic .gootranslink ,#divSelflag .gootranslink\
 {color:'+FG.l[i]+'!important; text-decoration: none !important;\
-font: 9px Tahoma,sans-serif !important;'+  //[FIXED] So huge font, need smaller
+font: 1.4vh Tahoma,sans-serif !important;'+  //[FIXED] So huge font, need smaller
 'cursor:pointer !important; }'  +
 '#divDic a.gootranslink:visited,\
  #divDic a.gootranslink:hover,\
@@ -1554,7 +1554,7 @@ cursor:pointer;}'+
 'margin-bottom: .1em!important; overflow-y:auto !important; overflow-x:hidden; font-size:medium;}'+
 '#divDic #divOpt {background:'+BG.C[i]+'!important; position:relative; padding:5px; text-align:left !important;}'+
 '#divLookup, #divUse {background-color:transparent !important; position:absolute;\
- padding: 3px; margin: 0;}'+
+ padding: 0; margin: 0;}'+  //[FIXED] padding
 '#divDic>#divSourceshow {\
 border: none; padding: 0 0 4px 0; margin: 0;}'+
 //[FIXED] Added 'min-height' and also 'border-radius' for disallow conflicts in some sites.
@@ -1584,7 +1584,7 @@ border: none; padding: 0 0 4px 0; margin: 0;}'+
 '#gtp_dict .gtp-block {display: block}'+
 '#divTtsIfr{position: relative;padding: 0!important;margin:3px 0 0 0!important;\
 background:'+ BG.C[i] +'!important; color:'+FG.t[i]+'!important;}'+ //[FIXED] So huge font, need smaller
-'#gdptrantxt {font-size: 11px !important; line-height: 12px;\
+'#gdptrantxt {font-size: 1em !important; line-height: 1em !important;\
  position: relative;\
  z-index:100500 !important;\
  margin: 0 auto 4px auto  !important;\
@@ -1661,10 +1661,11 @@ border-width: 1px 1px 1px 8px; }\
 
 if(-1 !== n) return;
 stickStyle(
-'#gdptrantxt * {font-size: 11px !important;}'+  //[FIXED] restored font-size
+'#gdptrantxt * {font-size: 1.7vh !important;}'+  //[FIXED] restored font-size
+'#imgLookForw, #imgLookBack { max-height: 10vh !important; max-width: 10vh !important; width: 2.8vh !important; padding: 0 !important; box-sizing: border-box;} #imgLookBack {margin-left: 5px !important;}'+  //[FIXED] size of init buttons
 '#divDic, #divDic textarea, #divDic iframe {resize: both !important; }'+
 '#divDic *::'+(isChrome?'':moz)+'selection {background: #047 !important; color: #FC8 !important; }'+
-'#divUse img, #divDic img, #divLookup img {display: inline; max-height: 11px; max-width: 14px; width: auto; height: auto; margin: 0; padding:0; vertical-align: baseline !important;}'+  //[FIXED] So huge font, need smaller. Also fixed incorrect linebreak for 'margin'.
+'#divUse img, #divDic img, #divLookup img {display: inline; max-height: 1.8vh; max-width: 2.2vh; width: auto; height: auto; margin: 0; padding:0; vertical-align: baseline !important;}'+  //[FIXED] So huge imgs, need smaller. Also fixed incorrect linebreak for 'margin'.
 '#divTtsLnk:after{ content:url('+imgPlay+');}'+
 '#divTtsLnk {padding: 0 2px; margin: 0 2px 0 2px !important;}'+
 '#divTtsIfh {width: 100%;overflow-x:hidden;\
